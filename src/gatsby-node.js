@@ -30,10 +30,10 @@ function getApi() {
 }
 
 exports.sourceNodes = async (
-  { boundActionCreators, store, cache, createNodeId },
+  { actions, store, cache, createNodeId },
   { channelId, apiKey, maxVideos=50 }
 ) => {
-  const { createNode } = boundActionCreators;
+  const { createNode } = actions;
 
   const createVideoNodesFromChannelId = async (channelId, apiKey) => {
     var api = getApi();

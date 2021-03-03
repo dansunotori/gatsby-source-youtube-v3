@@ -41,7 +41,7 @@ function getApi() {
 
 exports.sourceNodes = function () {
   var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(_ref, _ref2) {
-    var boundActionCreators = _ref.boundActionCreators,
+    var actions = _ref.actions,
         store = _ref.store,
         cache = _ref.cache,
         createNodeId = _ref.createNodeId;
@@ -54,7 +54,7 @@ exports.sourceNodes = function () {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
-            createNode = boundActionCreators.createNode;
+            createNode = actions.createNode;
 
             createVideoNodesFromChannelId = function () {
               var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(channelId, apiKey) {

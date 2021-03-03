@@ -1,8 +1,8 @@
 {
-    "name": "gatsby-source-youtube-v2",
+    "name": "gatsby-source-youtube-v3",
     "version": "1.0.0",
     "description": "Gatsby source to fetch data from Youtube API",
-    "repository": "https://github.com/iyeraravind/gatsby-source-youtube",
+    "repository": "https://github.com/bene/gatsby-source-youtube-v3",
     "main": "index.js",
     "scripts": {
         "build": "babel src --out-dir . --ignore __tests__",
