@@ -1,12 +1,12 @@
 # gatsby-source-youtube-v2
 
-A [gatsby](https://www.gatsbyjs.org/) source plugin for fetching videos from a list of Youtube channels using their channel IDs (and plays nice with Gatsby v2).
+A [gatsby](https://www.gatsbyjs.org/) source plugin for fetching videos from a list of Youtube channels using their channel IDs (and plays nice with Gatsby v3).
 
 Learn more about Gatsby plugins and how to use them here: https://www.gatsbyjs.org/docs/plugins/
 
 ## Install
 
-`npm install --save gatsby-source-youtube-v2`
+`npm install --save gatsby-source-youtube-v3`
 
 
 ## gatsby-config.js
@@ -14,10 +14,10 @@ Learn more about Gatsby plugins and how to use them here: https://www.gatsbyjs.o
 ```javascript
 plugins: [
   {
-    resolve: `gatsby-source-youtube-v2`,
+    resolve: `gatsby-source-youtube-v3`,
     options: {
-      channelId: ['<< Array of Youtube channelIDs>>', 'UCK8sQmJBp8GCxrOtXWBpyEA', 'UCK8sQmJBp8GCxrOtXWBpyXY'],
-      apiKey: '<< Add your Youtube api key here>>',
+      channelId: ['<< Array of Youtube channelIDs>>', 'UCK8sQmJBp8GCxrOtXWBpyEA'],
+      apiKey: '<< Add your Youtube api key here>>', // Optional for public requests
       maxVideos: 50 // Defaults to 50
     },
   },
