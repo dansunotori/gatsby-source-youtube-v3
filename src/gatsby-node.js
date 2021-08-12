@@ -43,7 +43,7 @@ exports.sourceNodes = async (
       `channels?part=contentDetails&id=${channelId}&key=${apiKey}`
     );
 
-    const channelData = channelResp.data.items[0];
+    const channelData = channelResp.data.items && channelResp.data.items[0];
     if (!!channelData) {
       const uploadsId = get(
         channelData,
