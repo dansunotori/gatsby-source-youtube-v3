@@ -28,7 +28,6 @@ exports.normalizeRecords = items => {
       privacyStatus: get(item, "status.privacyStatus"),
       channelId: get(item, "snippet.channelId"),
       channelTitle: get(item, "snippet.channelTitle"),
-      tags: get(item, "snippet.tags"),
       thumbnail: get(
         item,
         "snippet.thumbnails.maxres",
@@ -45,7 +44,8 @@ exports.normalizeRecords = items => {
             )
           )
         )
-      )
+      ),
+      tagsList: get(item, "snippet.tags[]", "undefined")
     };
 
     return e;
