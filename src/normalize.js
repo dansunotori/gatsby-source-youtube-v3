@@ -44,8 +44,9 @@ exports.normalizeRecords = items => {
             )
           )
         )
-      ),
-      tagsList: get(item, "snippet.tags[]", "undefined")
+      )
+      //,
+      //tagsList: get(item, "snippet.tags[]", "undefined")
     };
 
     return e;
