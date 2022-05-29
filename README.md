@@ -6,7 +6,7 @@ Learn more about Gatsby plugins and how to use them here: https://www.gatsbyjs.o
 
 ## Install
 
-`npm install --save gatsby-source-youtube-v3`
+`npm install --save @dansunotori/gatsby-source-youtube-v3`
 
 
 ## gatsby-config.js
@@ -14,7 +14,7 @@ Learn more about Gatsby plugins and how to use them here: https://www.gatsbyjs.o
 ```javascript
 plugins: [
   {
-    resolve: `gatsby-source-youtube-v3`,
+    resolve: `@dansunotori/gatsby-source-youtube-v3`,
     options: {
       channelId: ['<< Array of Youtube channelIDs>>', 'UCK8sQmJBp8GCxrOtXWBpyEA'],
       apiKey: '<< Add your Youtube api key here>>', // Optional for public requests
