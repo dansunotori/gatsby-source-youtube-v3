@@ -30,7 +30,7 @@ function getApi() {
 }
 
 exports.sourceNodes = async (
-  { actions, store, cache, createNodeId },
+  { actions, getCache, createNodeId },
   { channelId, apiKey, maxVideos=50 }
 ) => {
   const { createNode } = actions;
@@ -70,9 +70,10 @@ exports.sourceNodes = async (
     videos = normalize.createGatsbyIds(videos, createNodeId);
     videos = await normalize.downloadThumbnails({
       items: videos,
-      store,
-      cache,
-      createNode
+      //store,
+      getCache,
+      createNode,
+      createNodeId
     });
     normalize.createNodesFromEntities(videos, createNode);
 

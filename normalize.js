@@ -38,7 +38,6 @@ exports.normalizeRecords = function (items) {
       channelId: get(item, "snippet.channelId"),
       channelTitle: get(item, "snippet.channelTitle"),
       thumbnail: get(item, "snippet.thumbnails.maxres", get(item, "snippet.thumbnails.standard", get(item, "snippet.thumbnails.high", get(item, "snippet.thumbnails.medium", get(item, "snippet.thumbnails.default"))))),
-
       tagsList: get(item, "snippet.tags[]", "undefined")
     };
 
@@ -49,9 +48,9 @@ exports.normalizeRecords = function (items) {
 exports.downloadThumbnails = function () {
   var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(_ref) {
     var items = _ref.items,
-        store = _ref.store,
-        cache = _ref.cache,
-        createNode = _ref.createNode;
+        getCache = _ref.getCache,
+        createNode = _ref.createNode,
+        createNodeId = _ref.createNodeId;
     return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
@@ -74,9 +73,11 @@ exports.downloadThumbnails = function () {
                         _context.next = 5;
                         return createRemoteFileNode({
                           url: item.thumbnail.url,
-                          store: store,
-                          cache: cache,
-                          createNode: createNode
+                          //store,
+                          //cache,
+                          getCache: getCache,
+                          createNode: createNode,
+                          createNodeId: createNodeId
                         });
 
                       case 5:
