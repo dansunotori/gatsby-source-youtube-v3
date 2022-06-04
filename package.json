@@ -1,6 +1,6 @@
 {
     "name": "@dansunotori/gatsby-source-youtube-v3",
-    "version": "3.0.10",
+    "version": "3.0.12",
     "description": "Gatsby source to fetch data from Youtube API",
     "repository": "https://github.com/dansunotori/gatsby-source-youtube-v3",
     "main": "index.js",
@@ -24,7 +24,7 @@
     "dependencies": {
         "axios": "^0.21.1",
         "babel-polyfill": "^6.26.0",
-        "gatsby-source-filesystem": "^4.0.0",
+        "gatsby-source-filesystem": "^1.5.27",
         "lodash": "^4.17.5"
     },
     "devDependencies": {

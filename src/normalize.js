@@ -3,18 +3,22 @@ const { createRemoteFileNode } = require("gatsby-source-filesystem");
 const crypto = require("crypto");
 const polyfill = require("babel-polyfill");
 
-const digest = (str) => crypto.createHash(`md5`).update(str).digest(`hex`);
+const digest = str =>
+  crypto
+    .createHash(`md5`)
+    .update(str)
+    .digest(`hex`);
 
 exports.createGatsbyIds = (items, createNodeId) => {
-  return items.map((e) => {
+  return items.map(e => {
     e.originalID = e.id;
     e.id = createNodeId(e.id.toString());
     return e;
   });
 };
 
-exports.normalizeRecords = (items) => {
-  return (items || []).map((item) => {
+exports.normalizeRecords = items => {
+  return (items || []).map(item => {
     const e = {
       id: get(item, "id"),
       publishedAt: get(item, "snippet.publishedAt"),
@@ -40,33 +44,26 @@ exports.normalizeRecords = (items) => {
             )
           )
         )
-      ),
-      tagsList: get(item, "snippet.tags[]", "undefined"),
+      )
+      ,
+      tagsList: get(item, "snippet.tags[]", "undefined")
     };
 
     return e;
   });
 };
 
-exports.downloadThumbnails = async ({
-  items,
-  //store,
-  getCache,
-  createNode,
-  createNodeId,
-}) =>
+exports.downloadThumbnails = async ({ items, store, cache, createNode }) =>
   Promise.all(
-    items.map(async (item) => {
+    items.map(async item => {
       let fileNode;
       if (item.thumbnail && item.thumbnail.url) {
         try {
           fileNode = await createRemoteFileNode({
             url: item.thumbnail.url,
-            //store,
-            //cache,
-            getCache,
-            createNode,
-            createNodeId,
+            store,
+            cache,
+            createNode
           });
         } catch (error) {
           // noop
@@ -82,7 +79,7 @@ exports.downloadThumbnails = async ({
   );
 
 exports.createNodesFromEntities = (items, createNode) => {
-  items.forEach((e) => {
+  items.forEach(e => {
     let { ...entity } = e;
     let node = {
       ...entity,
@@ -90,8 +87,8 @@ exports.createNodesFromEntities = (items, createNode) => {
       children: [],
       internal: {
         type: "YoutubeVideo",
-        contentDigest: digest(JSON.stringify(entity)),
-      },
+        contentDigest: digest(JSON.stringify(entity))
+      }
     };
 
     createNode(node);

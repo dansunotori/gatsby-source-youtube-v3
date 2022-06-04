@@ -42,7 +42,8 @@ function getApi() {
 exports.sourceNodes = function () {
   var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(_ref, _ref2) {
     var actions = _ref.actions,
-        getCache = _ref.getCache,
+        store = _ref.store,
+        cache = _ref.cache,
         createNodeId = _ref.createNodeId;
     var channelId = _ref2.channelId,
         apiKey = _ref2.apiKey,
@@ -112,10 +113,9 @@ exports.sourceNodes = function () {
                         _context.next = 26;
                         return normalize.downloadThumbnails({
                           items: videos,
-                          //store,
-                          getCache: getCache,
-                          createNode: createNode,
-                          createNodeId: createNodeId
+                          store: store,
+                          cache: cache,
+                          createNode: createNode
                         });
 
                       case 26:
