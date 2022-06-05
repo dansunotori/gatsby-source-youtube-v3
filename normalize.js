@@ -12,7 +12,7 @@ var _require = require("gatsby-source-filesystem"),
     createRemoteFileNode = _require.createRemoteFileNode;
 
 var crypto = require("crypto");
-var polyfill = require("babel-polyfill");
+//const polyfill = require("babel-polyfill");
 
 var digest = function digest(str) {
   return crypto.createHash("md5").update(str).digest("hex");
@@ -28,6 +28,8 @@ exports.createGatsbyIds = function (items, createNodeId) {
 
 exports.normalizeRecords = function (items) {
   return (items || []).map(function (item) {
+    //console.log(JSON.stringify(item));
+
     var e = {
       id: get(item, "id"),
       publishedAt: get(item, "snippet.publishedAt"),
@@ -47,9 +49,9 @@ exports.normalizeRecords = function (items) {
 exports.downloadThumbnails = function () {
   var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(_ref) {
     var items = _ref.items,
-        store = _ref.store,
-        cache = _ref.cache,
-        createNode = _ref.createNode;
+        getCache = _ref.getCache,
+        createNode = _ref.createNode,
+        createNodeId = _ref.createNodeId;
     return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
@@ -64,7 +66,7 @@ exports.downloadThumbnails = function () {
                         fileNode = void 0;
 
                         if (!(item.thumbnail && item.thumbnail.url)) {
-                          _context.next = 10;
+                          _context.next = 11;
                           break;
                         }
 
@@ -72,21 +74,24 @@ exports.downloadThumbnails = function () {
                         _context.next = 5;
                         return createRemoteFileNode({
                           url: item.thumbnail.url,
-                          store: store,
-                          cache: cache,
-                          createNode: createNode
+                          getCache: getCache,
+                          createNode: createNode,
+                          createNodeId: createNodeId
                         });
 
                       case 5:
                         fileNode = _context.sent;
-                        _context.next = 10;
+                        _context.next = 11;
                         break;
 
                       case 8:
                         _context.prev = 8;
                         _context.t0 = _context["catch"](2);
 
-                      case 10:
+                        // noop
+                        console.error(_context.t0);
+
+                      case 11:
 
                         if (fileNode) {
                           item.localThumbnail___NODE = fileNode.id;
@@ -94,7 +99,7 @@ exports.downloadThumbnails = function () {
 
                         return _context.abrupt("return", item);
 
-                      case 12:
+                      case 13:
                       case "end":
                         return _context.stop();
                     }

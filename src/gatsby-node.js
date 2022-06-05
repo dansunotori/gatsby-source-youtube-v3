@@ -1,19 +1,19 @@
 const axios = require("axios");
 const get = require("lodash/get");
 const normalize = require("./normalize");
-const polyfill = require("babel-polyfill");
+//const polyfill = require("babel-polyfill");
 
 function getApi() {
   const rateLimit = 500;
   let lastCalled = null;
 
-  const rateLimiter = call => {
+  const rateLimiter = (call) => {
     const now = Date.now();
     if (lastCalled) {
       lastCalled += rateLimit;
       const wait = lastCalled - now;
       if (wait > 0) {
-        return new Promise(resolve => setTimeout(() => resolve(call), wait));
+        return new Promise((resolve) => setTimeout(() => resolve(call), wait));
       }
     }
     lastCalled = now;
@@ -21,7 +21,7 @@ function getApi() {
   };
 
   const api = axios.create({
-    baseURL: "https://www.googleapis.com/youtube/v3/"
+    baseURL: "https://www.googleapis.com/youtube/v3/",
   });
 
   api.interceptors.request.use(rateLimiter);
@@ -30,8 +30,8 @@ function getApi() {
 }
 
 exports.sourceNodes = async (
-  { actions, store, cache, createNodeId },
-  { channelId, apiKey, maxVideos=50 }
+  { actions, getCache, createNodeId },
+  { channelId, apiKey, maxVideos = 50 }
 ) => {
   const { createNode } = actions;
 
@@ -67,23 +67,33 @@ exports.sourceNodes = async (
     }
 
     videos = normalize.normalizeRecords(videos);
+    //console.log(`===== normalised videos: ${videos.length}`);
+
     videos = normalize.createGatsbyIds(videos, createNodeId);
+    //console.log(`===== created Gatsby Ids: ${videos.length}`);
+
     videos = await normalize.downloadThumbnails({
       items: videos,
-      store,
-      cache,
-      createNode
+      getCache,
+      createNode,
+      createNodeId,
     });
+    //console.log(`===== downloaded thumblnails: ${videos.length}`);
+
     normalize.createNodesFromEntities(videos, createNode);
+    //console.log(`===== created nodes from entities: ${videos.length}`);
 
     return;
-  }
+  };
 
   try {
-    if(Array.isArray(channelId)) {
-      await Promise.all(channelId.map(async (channelIdEntry) => createVideoNodesFromChannelId(channelIdEntry, apiKey)));
-    }
-    else {
+    if (Array.isArray(channelId)) {
+      await Promise.all(
+        channelId.map(async (channelIdEntry) =>
+          createVideoNodesFromChannelId(channelIdEntry, apiKey)
+        )
+      );
+    } else {
       await createVideoNodesFromChannelId(channelId, apiKey);
     }
     return;
@@ -91,4 +101,8 @@ exports.sourceNodes = async (
     console.error(error);
     process.exit(1);
   }
+};
+
+exports.onPreInit = () => {
+  // console.log("===== gatsby-source-youtube-v3 loaded");
 };

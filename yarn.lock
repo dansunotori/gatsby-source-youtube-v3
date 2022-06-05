@@ -1321,7 +1321,7 @@ gatsby-core-utils@^3.15.0:
     tmp "^0.2.1"
     xdg-basedir "^4.0.0"
 
-gatsby-source-filesystem@^4.15.0:
+gatsby-source-filesystem@^4.0.0:
   version "4.15.0"
   resolved "https://registry.yarnpkg.com/gatsby-source-filesystem/-/gatsby-source-filesystem-4.15.0.tgz#115eafc580ec0c8083b37e54336013c65e5073b3"
   integrity sha512-FlT2Tr4AE/A7PDtS7X1NM0fyl/VULkIl97KlvgW3kl31aRS/JozVLR0stYHUYNAzWi24dDJphBqwxXaGDBXNYg==

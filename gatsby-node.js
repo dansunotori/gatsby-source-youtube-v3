@@ -7,7 +7,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 var axios = require("axios");
 var get = require("lodash/get");
 var normalize = require("./normalize");
-var polyfill = require("babel-polyfill");
+//const polyfill = require("babel-polyfill");
 
 function getApi() {
   var rateLimit = 500;
@@ -42,8 +42,7 @@ function getApi() {
 exports.sourceNodes = function () {
   var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(_ref, _ref2) {
     var actions = _ref.actions,
-        store = _ref.store,
-        cache = _ref.cache,
+        getCache = _ref.getCache,
         createNodeId = _ref.createNodeId;
     var channelId = _ref2.channelId,
         apiKey = _ref2.apiKey,
@@ -109,19 +108,26 @@ exports.sourceNodes = function () {
                       case 22:
 
                         videos = normalize.normalizeRecords(videos);
+                        //console.log(`===== normalised videos: ${videos.length}`);
+
                         videos = normalize.createGatsbyIds(videos, createNodeId);
+                        //console.log(`===== created Gatsby Ids: ${videos.length}`);
+
                         _context.next = 26;
                         return normalize.downloadThumbnails({
                           items: videos,
-                          store: store,
-                          cache: cache,
-                          createNode: createNode
+                          getCache: getCache,
+                          createNode: createNode,
+                          createNodeId: createNodeId
                         });
 
                       case 26:
                         videos = _context.sent;
 
+                        //console.log(`===== downloaded thumblnails: ${videos.length}`);
+
                         normalize.createNodesFromEntities(videos, createNode);
+                        //console.log(`===== created nodes from entities: ${videos.length}`);
 
                         return _context.abrupt("return");
 
@@ -197,3 +203,7 @@ exports.sourceNodes = function () {
     return _ref3.apply(this, arguments);
   };
 }();
+
+exports.onPreInit = function () {
+  // console.log("===== gatsby-source-youtube-v3 loaded");
+};
