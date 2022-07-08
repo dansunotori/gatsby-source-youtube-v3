@@ -46,6 +46,44 @@ exports.normalizeRecords = function (items) {
   });
 };
 
+exports.updateVideoDetails = function (items, details) {
+  return (items || []).map(function (item) {
+    var e = item;
+    var detail = details.find(function (d) {
+      return d.id === e.videoId;
+    });
+    e.tags = detail.snippet.tags;
+    e.duration = detail.contentDetails.duration;
+    return e;
+  });
+};
+
+exports.createTagsFromVideos = function (videos) {
+  var allTags = [];
+
+  (videos || []).map(function (video) {
+    (video.tags || []).map(function (tag) {
+      var existingTag = allTags.find(function (t) {
+        return t.tag === tag;
+      });
+      if (existingTag) {
+        existingTag.videos.push(video.videoId);
+        existingTag.numVideos += 1;
+      } else {
+        var newTag = {
+          id: tag,
+          tag: tag,
+          videos: [video.videoId],
+          numVideos: 1
+        };
+        allTags.push(newTag);
+      }
+    });
+  });
+
+  return allTags;
+};
+
 exports.downloadThumbnails = function () {
   var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(_ref) {
     var items = _ref.items,
@@ -125,7 +163,24 @@ exports.downloadThumbnails = function () {
   };
 }();
 
-exports.createNodesFromEntities = function (items, createNode) {
+exports.normalizePlaylists = function (items) {
+  return (items || []).map(function (item) {
+    var videos = [];
+    var playlistItems = get(item, "videos");
+    (playlistItems || []).map(function (video) {
+      videos.push(get(video, "contentDetails.videoId"));
+    });
+    //console.log(videos);
+    var e = {
+      id: get(item, "id"),
+      videos: videos
+    };
+
+    return e;
+  });
+};
+
+exports.createNodesFromEntities = function (items, createNode, type) {
   items.forEach(function (e) {
     var entity = _objectWithoutProperties(e, []);
 
@@ -133,7 +188,7 @@ exports.createNodesFromEntities = function (items, createNode) {
       parent: null,
       children: [],
       internal: {
-        type: "YoutubeVideo",
+        type: type,
         contentDigest: digest(JSON.stringify(entity))
       }
     });

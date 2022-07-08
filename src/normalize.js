@@ -49,6 +49,40 @@ exports.normalizeRecords = (items) => {
   });
 };
 
+exports.updateVideoDetails = (items, details) => {
+  return (items || []).map((item) => {
+    const e = item;
+    let detail = details.find((d) => d.id === e.videoId);
+    e.tags = detail.snippet.tags;
+    e.duration = detail.contentDetails.duration;
+    return e;
+  });
+};
+
+exports.createTagsFromVideos = (videos) => {
+  let allTags = [];
+
+  (videos || []).map((video) => {
+    (video.tags || []).map((tag) => {
+      let existingTag = allTags.find((t) => t.tag === tag);
+      if (existingTag) {
+        existingTag.videos.push(video.videoId);
+        existingTag.numVideos += 1;
+      } else {
+        const newTag = {
+          id: tag,
+          tag: tag,
+          videos: [video.videoId],
+          numVideos: 1,
+        };
+        allTags.push(newTag);
+      }
+    });
+  });
+
+  return allTags;
+};
+
 exports.downloadThumbnails = async ({
   items,
   getCache,
@@ -80,7 +114,24 @@ exports.downloadThumbnails = async ({
     })
   );
 
-exports.createNodesFromEntities = (items, createNode) => {
+exports.normalizePlaylists = (items) => {
+  return (items || []).map((item) => {
+    let videos = [];
+    const playlistItems = get(item, "videos");
+    (playlistItems || []).map((video) => {
+      videos.push(get(video, "contentDetails.videoId"));
+    });
+    //console.log(videos);
+    const e = {
+      id: get(item, "id"),
+      videos: videos,
+    };
+
+    return e;
+  });
+};
+
+exports.createNodesFromEntities = (items, createNode, type) => {
   items.forEach((e) => {
     let { ...entity } = e;
     let node = {
@@ -88,7 +139,7 @@ exports.createNodesFromEntities = (items, createNode) => {
       parent: null,
       children: [],
       internal: {
-        type: "YoutubeVideo",
+        type: type,
         contentDigest: digest(JSON.stringify(entity)),
       },
     };
