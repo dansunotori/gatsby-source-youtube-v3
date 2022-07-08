@@ -92,7 +92,7 @@ exports.sourceNodes = async (
 
       // get the first page of video details
       let videoResp = await api.get(
-        `videos?part=snippet%2CcontentDetails&id=${videoIdString}&key=${apiKey}`
+        `videos?part=snippet%2CcontentDetails%2Cstatistics&id=${videoIdString}&key=${apiKey}`
       );
       videoDetails.push(...videoResp.data.items);
 
@@ -104,7 +104,7 @@ exports.sourceNodes = async (
           .join(",");
 
         let videoResp = await api.get(
-          `videos?part=snippet%2CcontentDetails&id=${videoIdString}&key=${apiKey}`
+          `videos?part=snippet%2CcontentDetails%2Cstatistics&id=${videoIdString}&key=${apiKey}`
         );
         videoDetails.push(...videoResp.data.items);
       }

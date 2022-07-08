@@ -55,6 +55,9 @@ exports.updateVideoDetails = (items, details) => {
     let detail = details.find((d) => d.id === e.videoId);
     e.tags = detail.snippet.tags;
     e.duration = detail.contentDetails.duration;
+    e.viewCount = detail.statistics.viewCount;
+    e.likeCount = detail.statistics.likeCount;
+    e.commentCount = detail.statistics.commentCount;
     return e;
   });
 };

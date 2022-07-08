@@ -144,7 +144,7 @@ exports.sourceNodes = function () {
                         // get the first page of video details
 
                         _context2.next = 33;
-                        return api.get("videos?part=snippet%2CcontentDetails&id=" + videoIdString + "&key=" + apiKey);
+                        return api.get("videos?part=snippet%2CcontentDetails%2Cstatistics&id=" + videoIdString + "&key=" + apiKey);
 
                       case 33:
                         _videoResp = _context2.sent;
@@ -162,7 +162,7 @@ exports.sourceNodes = function () {
                         _pageSize2 = Math.min(50, videos.length - videoDetails.length);
                         _videoIdString = videoIDs.slice(videoDetails.length, videoDetails.length + _pageSize2).join(",");
                         _context2.next = 40;
-                        return api.get("videos?part=snippet%2CcontentDetails&id=" + _videoIdString + "&key=" + apiKey);
+                        return api.get("videos?part=snippet%2CcontentDetails%2Cstatistics&id=" + _videoIdString + "&key=" + apiKey);
 
                       case 40:
                         _videoResp2 = _context2.sent;

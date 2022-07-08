@@ -54,6 +54,9 @@ exports.updateVideoDetails = function (items, details) {
     });
     e.tags = detail.snippet.tags;
     e.duration = detail.contentDetails.duration;
+    e.viewCount = detail.statistics.viewCount;
+    e.likeCount = detail.statistics.likeCount;
+    e.commentCount = detail.statistics.commentCount;
     return e;
   });
 };
