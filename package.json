@@ -2,7 +2,10 @@
   "name": "@dansunotori/gatsby-source-youtube-v3",
   "version": "3.0.18",
   "description": "Gatsby source to fetch data from Youtube API",
-  "repository": "https://github.com/dansunotori/gatsby-source-youtube-v3",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dansunotori/gatsby-source-youtube-v3.git"
+  },
   "main": "index.js",
   "scripts": {
     "build": "babel src --out-dir . --ignore __tests__",
