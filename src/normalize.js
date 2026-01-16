@@ -1,7 +1,7 @@
+require("regenerator-runtime/runtime");
 const get = require("lodash/get");
 const { createRemoteFileNode } = require("gatsby-source-filesystem");
 const crypto = require("crypto");
-//const polyfill = require("babel-polyfill");
 
 const digest = (str) => crypto.createHash(`md5`).update(str).digest(`hex`);
 
