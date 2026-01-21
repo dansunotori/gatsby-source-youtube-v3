@@ -1,6 +1,6 @@
 {
   "name": "@dansunotori/gatsby-source-youtube-v3",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "Gatsby source to fetch data from Youtube API",
   "repository": {
     "type": "git",
@@ -25,10 +25,13 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.27.2",
-    "gatsby-source-filesystem": "^4.17.0-next.0",
-    "lodash": "^4.17.5",
-    "regenerator-runtime": "^0.13.11"
+    "axios": "^1.7.9",
+    "lodash": "^4.17.21",
+    "regenerator-runtime": "^0.14.1"
+  },
+  "peerDependencies": {
+    "gatsby": "^5.0.0",
+    "gatsby-source-filesystem": "^5.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
