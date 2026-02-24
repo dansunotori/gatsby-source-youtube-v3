@@ -41,6 +41,7 @@ function getApi() {
 exports.sourceNodes = function () {
   var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(_ref, _ref2) {
     var actions = _ref.actions,
+        cache = _ref.cache,
         getCache = _ref.getCache,
         createNodeId = _ref.createNodeId;
     var channelId = _ref2.channelId,
@@ -56,56 +57,76 @@ exports.sourceNodes = function () {
 
             createVideoNodesFromChannelId = function () {
               var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(channelId, apiKey) {
-                var _playlists;
-
-                var api, videos, videoIDs, videoDetails, playlists, pageSize, playlistResp, _playlists2, nextPageToken, allPlaylistVideos, seenVideoIds, uniqueVideos, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, item, videoId, privacyStatus, _pageSize, videoIdString, videoResp, _pageSize2, _videoIdString, _videoResp, tags;
+                var videos, playlists, cacheKey, cached, _playlists, api, videoIDs, videoDetails, pageSize, playlistResp, _playlists2, nextPageToken, allPlaylistVideos, seenVideoIds, uniqueVideos, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, item, videoId, privacyStatus, _pageSize, videoIdString, videoResp, _pageSize2, _videoIdString, _videoResp, tags;
 
                 return regeneratorRuntime.wrap(function _callee2$(_context2) {
                   while (1) {
                     switch (_context2.prev = _context2.next) {
                       case 0:
+                        videos = void 0;
+                        playlists = void 0;
+                        cacheKey = "youtube-api-data-" + channelId;
+                        _context2.next = 5;
+                        return cache.get(cacheKey);
+
+                      case 5:
+                        cached = _context2.sent;
+
+                        if (!cached) {
+                          _context2.next = 12;
+                          break;
+                        }
+
+                        console.log("[youtube] Cache hit for channel " + channelId + ", skipping API calls");
+                        videos = cached.videos;
+                        playlists = cached.playlists;
+                        _context2.next = 97;
+                        break;
+
+                      case 12:
+                        console.log("[youtube] Cache miss for channel " + channelId + ", fetching from API");
                         api = getApi();
-                        videos = [];
                         videoIDs = [];
                         videoDetails = [];
+
+                        videos = [];
                         playlists = [];
 
                         // =============================
                         // Step 1: Download all playlists for the channel
                         // =============================
-
                         pageSize = 50;
 
                         // get the first page of playlists
 
-                        _context2.next = 8;
+                        _context2.next = 21;
                         return api.get("playlists?channelId=" + channelId + "&part=id,snippet&maxResults=" + pageSize + "&key=" + apiKey);
 
-                      case 8:
+                      case 21:
                         playlistResp = _context2.sent;
 
                         (_playlists = playlists).push.apply(_playlists, _toConsumableArray(playlistResp.data.items));
 
                         // get the next pages of playlists
 
-                      case 10:
+                      case 23:
                         if (!playlistResp.data.nextPageToken) {
-                          _context2.next = 18;
+                          _context2.next = 31;
                           break;
                         }
 
                         nextPageToken = playlistResp.data.nextPageToken;
-                        _context2.next = 14;
+                        _context2.next = 27;
                         return api.get("playlists?channelId=" + channelId + "&part=id,snippet&maxResults=" + pageSize + "&pageToken=" + nextPageToken + "&key=" + apiKey);
 
-                      case 14:
+                      case 27:
                         playlistResp = _context2.sent;
 
                         (_playlists2 = playlists).push.apply(_playlists2, _toConsumableArray(playlistResp.data.items));
-                        _context2.next = 10;
+                        _context2.next = 23;
                         break;
 
-                      case 18:
+                      case 31:
 
                         console.log("Downloaded " + playlists.length + " playlist(s)");
 
@@ -115,7 +136,7 @@ exports.sourceNodes = function () {
                         allPlaylistVideos = []; // raw API responses
 
                         seenVideoIds = new Set();
-                        _context2.next = 23;
+                        _context2.next = 36;
                         return Promise.all((playlists || []).map(function () {
                           var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(list) {
                             var _list$videos;
@@ -180,7 +201,7 @@ exports.sourceNodes = function () {
                           };
                         }()));
 
-                      case 23:
+                      case 36:
 
                         // =============================
                         // Step 3: Deduplicate and filter videos
@@ -189,12 +210,12 @@ exports.sourceNodes = function () {
                         _iteratorNormalCompletion = true;
                         _didIteratorError = false;
                         _iteratorError = undefined;
-                        _context2.prev = 27;
+                        _context2.prev = 40;
                         _iterator = allPlaylistVideos[Symbol.iterator]();
 
-                      case 29:
+                      case 42:
                         if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-                          _context2.next = 44;
+                          _context2.next = 57;
                           break;
                         }
 
@@ -205,21 +226,21 @@ exports.sourceNodes = function () {
                         // Skip if already seen
 
                         if (!seenVideoIds.has(videoId)) {
-                          _context2.next = 35;
+                          _context2.next = 48;
                           break;
                         }
 
-                        return _context2.abrupt("continue", 41);
+                        return _context2.abrupt("continue", 54);
 
-                      case 35:
+                      case 48:
                         if (!(privacyStatus !== "public" && privacyStatus !== "unlisted")) {
-                          _context2.next = 37;
+                          _context2.next = 50;
                           break;
                         }
 
-                        return _context2.abrupt("continue", 41);
+                        return _context2.abrupt("continue", 54);
 
-                      case 37:
+                      case 50:
 
                         seenVideoIds.add(videoId);
                         uniqueVideos.push(item);
@@ -227,52 +248,52 @@ exports.sourceNodes = function () {
                         // Respect maxVideos limit
 
                         if (!(uniqueVideos.length >= maxVideos)) {
-                          _context2.next = 41;
+                          _context2.next = 54;
                           break;
                         }
 
-                        return _context2.abrupt("break", 44);
+                        return _context2.abrupt("break", 57);
 
-                      case 41:
+                      case 54:
                         _iteratorNormalCompletion = true;
-                        _context2.next = 29;
+                        _context2.next = 42;
                         break;
 
-                      case 44:
-                        _context2.next = 50;
+                      case 57:
+                        _context2.next = 63;
                         break;
 
-                      case 46:
-                        _context2.prev = 46;
-                        _context2.t0 = _context2["catch"](27);
+                      case 59:
+                        _context2.prev = 59;
+                        _context2.t0 = _context2["catch"](40);
                         _didIteratorError = true;
                         _iteratorError = _context2.t0;
 
-                      case 50:
-                        _context2.prev = 50;
-                        _context2.prev = 51;
+                      case 63:
+                        _context2.prev = 63;
+                        _context2.prev = 64;
 
                         if (!_iteratorNormalCompletion && _iterator.return) {
                           _iterator.return();
                         }
 
-                      case 53:
-                        _context2.prev = 53;
+                      case 66:
+                        _context2.prev = 66;
 
                         if (!_didIteratorError) {
-                          _context2.next = 56;
+                          _context2.next = 69;
                           break;
                         }
 
                         throw _iteratorError;
 
-                      case 56:
-                        return _context2.finish(53);
+                      case 69:
+                        return _context2.finish(66);
 
-                      case 57:
-                        return _context2.finish(50);
+                      case 70:
+                        return _context2.finish(63);
 
-                      case 58:
+                      case 71:
 
                         videos = uniqueVideos;
                         console.log("Found " + videos.length + " unique video(s) (public + unlisted)");
@@ -290,7 +311,7 @@ exports.sourceNodes = function () {
                         // =========================
 
                         if (!(videos.length > 0)) {
-                          _context2.next = 79;
+                          _context2.next = 92;
                           break;
                         }
 
@@ -299,39 +320,39 @@ exports.sourceNodes = function () {
 
                         // get the first page of video details
 
-                        _context2.next = 67;
+                        _context2.next = 80;
                         return api.get("videos?part=snippet%2CcontentDetails%2Cstatistics&id=" + videoIdString + "&key=" + apiKey);
 
-                      case 67:
+                      case 80:
                         videoResp = _context2.sent;
 
                         videoDetails.push.apply(videoDetails, _toConsumableArray(videoResp.data.items));
 
                         // get the next pages of video details
 
-                      case 69:
+                      case 82:
                         if (!(videoDetails.length < videos.length)) {
-                          _context2.next = 78;
+                          _context2.next = 91;
                           break;
                         }
 
                         _pageSize2 = Math.min(50, videos.length - videoDetails.length);
                         _videoIdString = videoIDs.slice(videoDetails.length, videoDetails.length + _pageSize2).join(",");
-                        _context2.next = 74;
+                        _context2.next = 87;
                         return api.get("videos?part=snippet%2CcontentDetails%2Cstatistics&id=" + _videoIdString + "&key=" + apiKey);
 
-                      case 74:
+                      case 87:
                         _videoResp = _context2.sent;
 
                         videoDetails.push.apply(videoDetails, _toConsumableArray(_videoResp.data.items));
-                        _context2.next = 69;
+                        _context2.next = 82;
                         break;
 
-                      case 78:
+                      case 91:
 
                         console.log("Downloaded details of " + videoDetails.length + " video(s)");
 
-                      case 79:
+                      case 92:
 
                         // add video details to video nodes (tags etc)
                         videos = normalize.updateVideoDetails(videos, videoDetails);
@@ -339,11 +360,20 @@ exports.sourceNodes = function () {
                         // Normalize playlists (extract video IDs)
                         playlists = normalize.normalizePlaylists(playlists);
 
+                        // Write to cache
+                        _context2.next = 96;
+                        return cache.set(cacheKey, { videos: videos, playlists: playlists });
+
+                      case 96:
+                        console.log("[youtube] Cached API data for channel " + channelId);
+
+                      case 97:
+
                         // Gatsby requires its own node ids
                         videos = normalize.createGatsbyIds(videos, createNodeId);
 
                         // now add thumbnails
-                        _context2.next = 84;
+                        _context2.next = 100;
                         return normalize.downloadThumbnails({
                           items: videos,
                           getCache: getCache,
@@ -351,7 +381,7 @@ exports.sourceNodes = function () {
                           createNodeId: createNodeId
                         });
 
-                      case 84:
+                      case 100:
                         videos = _context2.sent;
                         tags = normalize.createTagsFromVideos(videos);
                         // Gatsby requires its own node ids
@@ -365,12 +395,12 @@ exports.sourceNodes = function () {
 
                         return _context2.abrupt("return");
 
-                      case 92:
+                      case 108:
                       case "end":
                         return _context2.stop();
                     }
                   }
-                }, _callee2, undefined, [[27, 46, 50, 58], [51,, 53, 57]]);
+                }, _callee2, undefined, [[40, 59, 63, 71], [64,, 66, 70]]);
               }));
 
               return function createVideoNodesFromChannelId(_x3, _x4) {
