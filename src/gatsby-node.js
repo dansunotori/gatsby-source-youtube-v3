@@ -41,13 +41,13 @@ exports.sourceNodes = async (
     const cacheKey = `youtube-api-data-${channelId}`;
     const cached = await cache.get(cacheKey);
 
-    if (cached) {
+    if (cached && Array.isArray(cached.videos) && Array.isArray(cached.playlists)) {
       console.log(`[youtube] Cache hit for channel ${channelId}, skipping API calls`);
       videos = cached.videos;
       playlists = cached.playlists;
     } else {
       console.log(`[youtube] Cache miss for channel ${channelId}, fetching from API`);
-      var api = getApi();
+      const api = getApi();
       let videoIDs = [];
       let videoDetails = [];
       videos = [];

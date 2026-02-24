@@ -72,7 +72,7 @@ exports.sourceNodes = function () {
                       case 5:
                         cached = _context2.sent;
 
-                        if (!cached) {
+                        if (!(cached && Array.isArray(cached.videos) && Array.isArray(cached.playlists))) {
                           _context2.next = 12;
                           break;
                         }
